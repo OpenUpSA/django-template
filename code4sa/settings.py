@@ -26,7 +26,7 @@ else:
     SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # XXX set me
-GOOGLE_ANALYTICS_ID = set this to something
+GOOGLE_ANALYTICS_ID = ''
 
 ALLOWED_HOSTS = ['*']
 
@@ -40,7 +40,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_assets',
+    #'django_assets',
+    'pipeline',
     'django_extensions',
 
     'code4sa',
@@ -114,18 +115,35 @@ STATIC_URL = '/static/'
 STATICFILES_FINDERS = (
    "django.contrib.staticfiles.finders.FileSystemFinder",
    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-   "django_assets.finders.AssetsFinder"
+   "pipeline.finders.PipelineFinder",
+   #"django_assets.finders.AssetsFinder"
 )
 
-import scss
-scss.config.LOAD_PATHS = [
+PYSCSS_LOAD_PATHS = [
         os.path.join(BASE_DIR, 'code4sa', 'static'),
         os.path.join(BASE_DIR, 'code4sa', 'static', 'bower_components'),
         ]
 
+PIPELINE_CSS = {
+    'css': {
+        'source_filenames': (
+          'bower_components/fontawesome/css/font-awesome.css',
+          'stylesheets/app.scss',
+        ),
+        'output_filename': 'app.css',
+    },
+}
+PIPELINE_CSS_COMPRESSOR = None
+
+PIPELINE_COMPILERS = (
+  'code4sa.storage.PyScssCompiler',
+)
+
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+#STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'code4sa.storage.GzipManifestPipelineStorage'
+
 
 # Logging
 LOGGING = {
