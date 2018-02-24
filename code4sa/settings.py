@@ -86,18 +86,25 @@ USE_L10N = True
 USE_TZ = True
 
 # Templates
-TEMPLATE_DEBUG = DEBUG
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "code4sa.context_processors.google_analytics",
-)
-
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
+                "django.contrib.messages.context_processors.messages",
+                "code4sa.context_processors.google_analytics",
+            ],
+        },
+    },
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -123,30 +130,31 @@ PYSCSS_LOAD_PATHS = [
     os.path.join(BASE_DIR, 'code4sa', 'static', 'bower_components'),
 ]
 
-PIPELINE_CSS = {
-    'css': {
-        'source_filenames': (
-            'bower_components/fontawesome/css/font-awesome.css',
-            'stylesheets/app.scss',
-        ),
-        'output_filename': 'app.css',
+PIPELINE = {
+    'STYLESHEETS': {
+        'css': {
+            'source_filenames': (
+                'bower_components/fontawesome/css/font-awesome.css',
+                'stylesheets/app.scss',
+            ),
+            'output_filename': 'app.css',
+        },
     },
-}
-PIPELINE_JS = {
-    'js': {
-        'source_filenames': (
-            'bower_components/jquery/dist/jquery.min.js',
-            'javascript/app.js',
-        ),
-        'output_filename': 'app.js',
+    'JAVASCRIPT': {
+        'js': {
+            'source_filenames': (
+                'bower_components/jquery/dist/jquery.min.js',
+                'javascript/app.js',
+            ),
+            'output_filename': 'app.js',
+        },
     },
+    'CSS_COMPRESSOR': None,
+    'JS_COMPRESSOR': None,
+    'COMPILERS': (
+        'code4sa.pipeline.PyScssCompiler',
+    ),
 }
-PIPELINE_CSS_COMPRESSOR = None
-PIPELINE_JS_COMPRESSOR = None
-
-PIPELINE_COMPILERS = (
-    'code4sa.pipeline.PyScssCompiler',
-)
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
